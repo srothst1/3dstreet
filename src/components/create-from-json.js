@@ -15,5 +15,6 @@ AFRAME.registerComponent('create-from-json', {
       }
     }
     appendChildElementsFromArray(JSON.parse(data.jsonString), el);
+    el.emit('create-from-json-complete', { format: 'element', el });
   }
 });
