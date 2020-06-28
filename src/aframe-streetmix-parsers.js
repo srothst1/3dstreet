@@ -624,7 +624,7 @@ function processBuildings (streetObject, buildingElementId) {
       cloneMixin({ objectMixinId: 'seawall', parentId: 'seawall-parent-' + positionX, rotation: '-90 ' + rotationCloneY + ' 0', step: 15, radius: 70 });
     }
 
-    if (currentValue == 'fence' || currentValue == 'parking-lot') {
+    if (currentValue === 'fence' || currentValue === 'parking-lot') {
       const objectPositionX = positionX - (sideMultiplier * buildingLotWidth / 2);
       // make the parent for all the objects to be cloned
       var placedObjectEl = document.createElement('a-entity');
@@ -634,12 +634,14 @@ function processBuildings (streetObject, buildingElementId) {
       // add the new elmement to DOM
 
       // clone a bunch of fences under the parent
-      var rotationCloneY = (side == 'right') ? -90 : 90;
+      var rotationCloneY = (side === 'right') ? -90 : 90;
 
-      //      cloneMixin({ objectMixinId: 'fence', parentId: 'fence-parent-' + positionX, rotation: '0 ' + rotationCloneY + ' 0', step: 9.25, radius: 70 });
-
-      var cloneMixinJSONString = JSON.stringify(createClonedEntitiesArray({ mixin: 'fence', rotation: '0 ' + rotationCloneY + ' 0', step: 9.25, radius: 70 }));
+      // cloneMixin({ objectMixinId: 'fence', parentId: 'fence-parent-' + positionX, rotation: '0 ' + rotationCloneY + ' 0', step: 9.25, radius: 70 });
+      var cloneMixinJSONString = JSON.stringify(createClonedEntitiesArray({ rotation: '0 ' + rotationCloneY + ' 0', step: 9.25, radius: 70, scale: '0.1 0.1 0.1' }));
       placedObjectEl.setAttribute('create-from-json', 'jsonString: ' + cloneMixinJSONString);
+      placedObjectEl.setAttribute('mixin', 'fence');
+      placedObjectEl.setAttribute('instanced-mesh', 'inheritMat: false; frustumCulled: false; center: true; bottomAlign: true');
+
       document.getElementById(buildingElementId).appendChild(placedObjectEl);
     }
   });
