@@ -10,14 +10,17 @@ AFRAME.registerComponent('street', {
     var data = this.data;
     var el = this.el;
 
-    // clear whatever is there
+    // clear whatever is underneath this element
     el.innerHTML = '';
 
-    // TODO: create new a-entity for buildings
-
     if (data.buildings) {
-      var buildingsEl = document.getElementById('buildings');
-      buildingsEl.innerHTML = '';
+      var buildingsEl = el.querySelector('.buildings'); // should always be null since we cleared innerHTML above
+      if (!buildingsEl) {
+        buildingsEl = document.createElement('a-entity');
+        buildingsEl.classList.add('buildings');
+        el.append(buildingsEl);
+      }
+      buildingsEl.innerHTML = ''; // superfluous since innerHTML reset above should have obliterated this
     }
 
     // getjson replacement from http://youmightnotneedjquery.com/#json

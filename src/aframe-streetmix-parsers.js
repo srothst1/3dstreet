@@ -337,7 +337,21 @@ function processSegments (segments, streetElementId) {
   // console.log(segments);
 
   // offset to center the street around global x position of 0
-  centerStreetParentEntity(segments, streetElementId);
+  // centerStreetParentEntity(segments, streetElementId);
+
+  // instead, make a parent with that offset
+
+  // var segmentsParent = {
+  //   tag: 'a-entity',
+  //   position: 'offset 0 0',
+  //   class: 'segmentsParent'
+  // };
+
+  // var groundJSONStringChild = {
+  //   tag: 'a-entity',
+  //   position: '0 -0.2 0',
+  //   mixin: 'ground-grass'
+  // };
 
   var cumulativeWidthInMeters = 0;
   for (var i = 0; i < segments.length; i++) {
