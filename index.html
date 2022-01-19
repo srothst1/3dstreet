@@ -3,6 +3,21 @@
   <head>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="./dist/aframe-street-component.js"></script>
+    <script src="https://rawgit.com/protyze/aframe-curve-component/master/dist/aframe-curve-component.min.js"></script>
+    <script src="alongpath.js"></script>
+  
+    <link rel="stylesheet" href="/style.css">
+    <script src="look-at.js"></script>
+    <script src="alongpath-scroll.js"></script>
+    <style>
+      a-scene {
+        height: 100vh;
+        width: 100vw;
+        position: fixed;
+        z-index: -1;
+      }
+      body { margin: 0px }
+    </style>
 
     <!-- user controls -->
     <script src="https://raw.githack.com/fernandojsg/aframe-teleport-controls/master/dist/aframe-teleport-controls.min.js"></script>
@@ -26,80 +41,75 @@
 
   </head>
   <body>
-    <!-- Original source https://www.codeply.com/go/sbfCXYgqoO -->
-    <nav class="navbar fixed-top navbar-expand navbar-dark bg-dark" >
-        <div class="d-flex flex-grow-1">
-            <a href="https://github.com/kfarr/3dstreet/" class="navbar-brand" title="View Github README">3DStreet Open Source Reference Application</a>
-            <form class="mr-2 my-auto w-100 d-inline-block order-1" onsubmit="location.href='#'+this.inputUrl.value; setTimeout(window.location.reload.bind(window.location));" >
-                <div class="input-group">
-                    <!-- <input type="text" class="form-control border border-right-0" placeholder="Paste Streetmix URL" /> -->
-                    <input id="inputUrl" value="" type="text" class="form-control d-none d-lg-block" onfocus="this.select();" title="Paste in Streetmix.net URL such as 'https://streetmix.net/kfarr/3'" />
-                    <span class="input-group-append">
-                        <button class="btn btn-outline-light border" type="submit" title="Clear Scene and Re-Render">
-                            <i class="fa fa-sync"></i>
-                        </button>
-                        <!-- <button class="btn btn-outline-light border" type="button" onclick="window.open(document.getElementById('inputUrl').value, '_blank');" title="Edit Street in Streetmix2D">
-                            <i class="fa fa-edit"></i>
-                        </button> -->
-                        <!-- <button class="btn btn-outline-light border" type="button" onclick="window.open(streetmixUserToAPI(document.getElementById('inputUrl').value), '_blank')" title="View Raw Streetmix JSON">
-                            <i class="fa fa-code"></i>
-                        </button> -->
-                        <!-- <button class="btn btn-outline-light border" type="button" onclick="startAudio()" title="Play Audio">
-                            <i id="audio-icon" class="fa fa-volume-mute" style="color: pink"></i>
-                        </button> -->
-                    </span>
-                </div>
-            </form>
+    <div class="aframe-bg">
+      <a-scene embedded vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false" gltf-model="dracoDecoderPath: https://www.gstatic.com/draco/v1/decoders/;">
+  
+      <!--Camera Path-->
+      <a-curve id="cameraPath" curve="closed: true">
+        <a-curve-point class="pt1" position="0 20 85" curve-point=""></a-curve-point>
+        <a-curve-point class="pt2" position="-43 28 -100" curve-point=""></a-curve-point>
+        <a-curve-point class="pt3" position="5 5 -95" curve-point=""></a-curve-point>     
+        <a-curve-point class="pt4" position="95 3 0" curve-point=""></a-curve-point>     
+        <a-curve-point class="pt5" position="0 20 85" curve-point=""></a-curve-point>
+      </a-curve>
+  
+      <a-curve id="targetPath" curve="closed: true">
+        <a-curve-point class="pt1" position="0 0 0" curve-point=""></a-curve-point>
+        <a-curve-point class="pt2" position="0 5 -90" curve-point=""></a-curve-point>
+        <a-curve-point class="pt3" position="-5 5 -85" curve-point=""></a-curve-point>     
+        <a-curve-point class="pt4" position="0 0 0" curve-point=""></a-curve-point>     
+        <a-curve-point class="pt5" position="0 0 0" curve-point=""></a-curve-point>
+      </a-curve>
+  
+      <!--Generated Curve For Paths-->
+      <a-draw-curve curveref="#cameraPath" material="shader: line; color: blue;"></a-draw-curve>
+      <a-draw-curve curveref="#targetPath" material="shader: line; color: red;"></a-draw-curve>
+      
+      <!--Camera Setup Using Look-At Component-->
+      <a-camera id="mainCam" alongpath-scroll="curve: #cameraPath" position="0 20 85" camera="fov: 50" look-at="#bullseye"></a-camera>
+      
+      <a-entity id="mySimpleStreet" street streetmix-loader="streetmixStreetURL: https://streetmix.net/kfarr/3/" ></a-entity>
+  
+      <a-entity id="mySimpleStreet2" position="0 0 -179" street="right: parking-lot" streetmix-loader="showBuildings: false; streetmixStreetURL: https://streetmix.net/kfarr/3/" ></a-entity>
+  
+      <a-entity id="mySimpleStreet3" position="0 0 -89.5" rotation="0 90 0" street="length: 325" streetmix-loader="showBuildings: false; streetmixStreetURL: https://streetmix.net/kfarr/15/" ></a-entity>
+  
+      <!--Target For Camera Focus To Stay Fixed On-->
+      <a-sphere id="bullseye" color="red" radius="2" position="0 0 0" visible="true" alongpath-scroll="curve: #targetPath" ></a-sphere>
+  
+      </a-scene>
+    </div>
+    
+    <div class="section wf-section">
+        <div class="div-block">
+          <h1 class="heading">Headline 1 Here</h1>
+          <p class="paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat. Aenean faucibus nibh et justo cursus id rutrum lorem imperdiet. Nunc ut sem vitae risus tristique posuere.</p>
         </div>
-    </nav>
-    <a-scene renderer="colorManagement: true; highRefreshRate: true; foveationLevel: 3; physicallyCorrectLights: true; logarithmicDepthBuffer: false;" fogoff="type: linear; color: #D5C69B; far: 200" gltf-model="dracoDecoderPath: https://www.gstatic.com/draco/versioned/decoders/1.4.3/">
-      <a-assets>
-        <streetmix-assets url="./"></streetmix-assets>
-
-        <a-cubemap id="skycube">
-          <img src="assets/images/skybox/posx.jpg">
-          <img src="assets/images/skybox/negx.jpg">
-          <img src="assets/images/skybox/posy.jpg">
-          <img src="assets/images/skybox/negy.jpg">
-          <img src="assets/images/skybox/posz.jpg">
-          <img src="assets/images/skybox/negz.jpg">
-        </a-cubemap>
-
-      </a-assets>
-
-      <a-entity id="cameraRig">
-        <a-entity id="camera" camera="far: 1000" wasd-controls="enabled: false" orbit-controls="autoRotate: true;autoRotateSpeed:0.01;target: 0 0 0;initialPosition:0 4 15;minDistance:3;maxDistance:100;enableKeys:false"></a-entity>
-        <a-entity id="leftHand" hand-controls="hand: left; handModelStyle: lowPoly; color: #ccffcc" teleport-controls="cameraRig: #cameraRig; button: trigger"></a-entity>
-        <a-entity id="rightHand" hand-controls="hand: right; handModelStyle: lowPoly; color: #ccffcc" teleport-controls="cameraRig: #cameraRig; button: trigger"></a-entity>
-      </a-entity>
-
-      <!-- <a-entity class="playme" sound="src: #ambientmp3; positional: false; loop: true;"></a-entity> -->
-
-      <a-entity light="type: ambient; color: #FFF; intensity: 2"></a-entity>
-      <a-entity light="type: directional; color: #FFF; intensity: 0.6" position="0.5 1 -1"></a-entity>
-
-      <a-ocean-plane height="100" width="100" position="0 -1 0" material="envMap: #skycube;"></a-ocean-plane>
-
-      <a-entity id="skybox" cubemap="folder: assets/images/skybox/"></a-entity>
-
-      <a-entity id="street-parent" street streetmix-loader set-loader-from-hash="defaultURL: https://streetmix.net/kfarr/3"></a-entity>
-      <!-- <a-entity mixin="dividers-flowers" ></a-entity> -->
-      <!-- Label text -->
-      <!-- <a-entity position="0 2 0" geometry="primitive: plane; width: 10; height: auto" material="src: #subtitle; alphaTest: 0.; transparent: true;"
-                text="color: yellow; align: left; value: San Francisco; width: 10; ">
-      <a-entity position="-5.1 0 0.001" geometry="primitive: plane; width: 0.1; height: 0.46" material="color: white;"></a-entity>
-      </a-entity>
-      <a-entity position="5 1 0" geometry="primitive: plane; width: 20; height: auto" material="src: #subtitle; alphaTest: 0.; transparent: true;"
-                text="color: yellow; align: left; value: Harrison Street; width: 20; ">
-      <a-entity position="-10.1 0 0.001" geometry="primitive: plane; width: 0.1; height: 0.92" material="color: white;"></a-entity>
-      </a-entity> -->
-
-      <!-- For debugging / validation: below are bounding boxes based on vehicle specs available online -->
-      <!-- <a-entity id="ford-crown-vic-bounding" geometry="depth: 5.3; height: 1.448; width: 1.99" position="0.92059 0.74 0"></a-entity>
-      <a-entity id="newflyer-XD40-bounding" geometry="depth: 12; height: 3.2; width: 2.59" position="-3.97 1.59 0"></a-entity>
-      <a-entity id="siemens-avenio-bounding" geometry="depth: 30; height: 3.4; width: 2.65" position="8.8 1.7 0"></a-entity> -->
-
-    </a-scene>
+      </div>
+      <div class="section wf-section">
+        <div class="div-block">
+          <h1 class="heading">Headline 2 Here</h1>
+          <p class="paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat. Aenean faucibus nibh et justo cursus id rutrum lorem imperdiet. Nunc ut sem vitae risus tristique posuere.</p>
+        </div>
+      </div>
+      <div class="section wf-section">
+        <div class="div-block">
+          <h1 class="heading">Headline 3 Here</h1>
+          <p class="paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat. Aenean faucibus nibh et justo cursus id rutrum lorem imperdiet. Nunc ut sem vitae risus tristique posuere.</p>
+        </div>
+      </div>
+      <div class="section wf-section">
+        <div class="div-block">
+          <h1 class="heading">Headline 4 Here</h1>
+          <p class="paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat. Aenean faucibus nibh et justo cursus id rutrum lorem imperdiet. Nunc ut sem vitae risus tristique posuere.</p>
+        </div>
+      </div>
+        <div class="section wf-section">
+        <div class="div-block">
+          <h1 class="heading">Headline 5 Here</h1>
+          <p class="paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat. Aenean faucibus nibh et justo cursus id rutrum lorem imperdiet. Nunc ut sem vitae risus tristique posuere.</p>
+        </div>
+      </div>  
   </body>
   <script>
     AFRAME.registerComponent('set-loader-from-hash', {
