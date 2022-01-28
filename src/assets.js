@@ -55,7 +55,9 @@
           <a-mixin id="food-trailer" gltf-part-plus="src: #vehicles; part: food-trailer"></a-mixin>
           <a-mixin id="sedan" gltf-part-plus="src: #vehicles; part: sedan"></a-mixin>
           <a-mixin id="sedan-taxi" gltf-part-plus="src: #vehicles; part: sedan-taxi"></a-mixin>
-          <a-mixin id="suv" gltf-part-plus="src: #vehicles; part: suv"></a-mixin>
+          <a-mixin id="suv"
+          gltf-part-plus="src: #vehicles; part: suv"
+          cube-env-map="extension: jpg; reflectivity: .5;"></a-mixin>
           <a-asset-item id="magic-carpet-glb" src="${assetUrl}assets/objects/magic_carpet.glb"></a-asset-item>
           <a-mixin id="Character_1_M" gltf-part-plus="src: #magic-carpet-glb; part: Character_1_M"></a-mixin>
           <a-mixin id="magic-carpet" gltf-part-plus="src: #magic-carpet-glb; part: magic-carpet"></a-mixin>
